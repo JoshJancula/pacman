@@ -1,0 +1,247 @@
+body {
+	background: black;
+}
+
+
+.pacMan {
+	height: 40px;
+	width: 40px;
+	background-image: url('./images/pacman.png');
+	background-size: 100%;
+	background-repeat: no-repeat;
+	display: inline-block;
+}
+
+
+.wall {
+	height: 40px;
+	width: 40px;
+	background-image: url('./images/wall.png');
+	display: inline-block;
+}
+
+.coin {
+	height: 40px;
+	width: 40px;
+	background-image: url('./images/coinSmall.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.empty {
+	height: 40px;
+	width: 40px;
+	background-color: black;
+	display: inline-block;
+}
+
+.blueGhost {
+	height: 40px;
+	width: 40px;
+	background-image: url('./images/blueGhost.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.redGhost {
+	height: 40px;
+	width: 40px;
+	background-image: url('./images/redGhost.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.greenGhost {
+	height: 40px;
+	width: 40px;
+	background-image: url('./images/greenGhost.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.ghostdouble {
+	height: 40px;
+	width: 40px;
+	background-image: url('./images/blueGhost.png');
+	display: inline-block;
+    /*background-repeat: no-repeat;*/
+    background-color: red;
+	background-position: center;
+}
+
+
+
+
+@media screen and (max-width: 900px) and (min-width: 601px) and (-webkit-min-device-pixel-ratio: 2){
+
+
+#map {
+		margin-top: 5%;
+		margin-left: 15%;
+	}
+
+	.card {
+		margin-top: 10%;
+		margin-right: 10%;
+	}
+
+.pacMan {
+	height: 20px;
+	width: 20px;
+	background-image: url('./images/pacmanSmall.png');
+	background-size: 100%;
+	background-repeat: no-repeat;
+	display: inline-block;
+}
+
+
+.wall {
+	height: 20px;
+	width: 20px;
+	background-image: url('./images/wall.png');
+	display: inline-block;
+}
+
+.coin {
+	height: 20px;
+	width: 20px;
+	background-image: url('./images/coinSmall.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.empty {
+	height: 20px;
+	width: 20px;
+	background-color: black;
+	display: inline-block;
+}
+
+.blueGhost {
+	height: 20px;
+	width: 20px;
+	background-image: url('./images/blueGhostSmall.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.redGhost {
+	height: 20px;
+	width: 20px;
+	background-image: url('./images/redGhostSmall.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.greenGhost {
+	height: 20px;
+	width: 20px;
+	background-image: url('./images/greenGhostSmall.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.ghostdouble {
+	height: 20px;
+	width: 20px;
+	background-image: url('./images/blueGhostSmall.png');
+	display: inline-block;
+    /*background-repeat: no-repeat;*/
+    background-color: red;
+	background-position: center;
+}
+
+
+}
+
+
+/*phones*/
+@media screen and (max-width: 600px) and (min-width: 275px) and (-webkit-min-device-pixel-ratio: 2){
+
+	#map {
+		margin-top: 10%;
+		margin-left: 1%;
+		margin-right: 1%;
+	}
+
+.pacMan {
+	height: 23px;
+	width: 23px;
+	background-image: url('./images/pacmanSmall.png');
+	background-size: 100%;
+	background-repeat: no-repeat;
+	display: inline-block;
+}
+
+
+.wall {
+	height: 23px;
+	width: 23px;
+	background-image: url('./images/wall.png');
+	display: inline-block;
+}
+
+.coin {
+	height: 23px;
+	width: 23px;
+	background-image: url('./images/coinSmall.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.empty {
+	height: 23px;
+	width: 23px;
+	background-color: black;
+	display: inline-block;
+}
+
+.blueGhost {
+	height: 23px;
+	width: 23px;
+	background-image: url('./images/blueGhostSmall.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.redGhost {
+	height: 23px;
+	width: 23px;
+	background-image: url('./images/redGhostSmall.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.greenGhost {
+	height: 23px;
+	width: 23px;
+	background-image: url('./images/greenGhostSmall.png');
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.ghostdouble {
+	height: 23px;
+	width: 23px;
+	background-image: url('./images/blueGhostSmall.png');
+	display: inline-block;
+    /*background-repeat: no-repeat;*/
+    background-color: red;
+	background-position: center;
+}
+
+
+
+}

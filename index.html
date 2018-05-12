@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!--Materialize CDN-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.2/css/materialize.min.css">
+
+    <!--jQuery library-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+   
+    <!--StyleSheet-->
+    <link rel="stylesheet" href="style.css" type="text/css" />
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+
+<body>
+
+<div class='row'>
+    <div class='col l8 m8 s12'>
+        <div id='map'></div>
+    </div>
+    <div class='col l4 m4 s12'>
+        <div class='row center'>
+            <div class='card blue darken-4'>
+                <div class='card-content'>
+                    <h4 class='white-text' id='score'></h4>
+                    <h4  class='white-text' id='lives'></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Modal Structure -->
+  <div id="gameOver" class="modal black">
+    <div class="modal-content center">
+      <h4 class='blue-text'>Game Over!!!</h4>
+      <p class='blue-text'>Play Again?</p>
+
+      <a href="#!" id='playAgain' class="modal-close waves-effect waves-green btn-flat blue-text">Yes</a>
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat blue-text">No</a>
+    </div>
+  </div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.2/js/materialize.min.js"></script>
+  <script src='game.js'></script>
+  <script>
+    $(document).ready(function(){
+    $('.modal').modal();
+  });
+</script>
+</body>
+
+</html>
