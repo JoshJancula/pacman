@@ -84,9 +84,11 @@ function createMap() { // places items at the x,y coordinates of grid
                 tempText = "<div class='wall'></div>";
             }
             if (lives <= 0) {
-                stop(int);
+                stopInterval(int);
                 stopInterval(gameTime);
                 $('#gameOver').modal('open');
+                lives = 1;
+                $('#lives').hide();
             }
             document.getElementById('map').innerHTML += tempText;
         }
