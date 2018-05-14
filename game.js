@@ -10,7 +10,7 @@ var map = [
     [00, 32, 01, 32, 01, 32, 01, 32, 01, 32, 01, 32, 01, 32, 01, 32, 00],
     [00, 32, 01, 32, 01, 01, 01, 01, 01, 01, 01, 01, 01, 32, 01, 32, 00],
     [00, 32, 01, 32, 01, 32, 32, 32, 01, 32, 32, 32, 01, 32, 01, 32, 00],
-    [64, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 128],
+    [64, 00, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 00, 128],
     [00, 32, 01, 32, 01, 32, 32, 32, 01, 32, 32, 32, 01, 32, 01, 32, 00],
     [00, 32, 01, 32, 01, 01, 01, 01, 01, 01, 01, 01, 01, 32, 01, 32, 00],
     [00, 32, 01, 32, 01, 32, 01, 32, 01, 32, 01, 32, 01, 32, 01, 32, 00],
@@ -26,59 +26,60 @@ var pacman = {
 }
 
 var score = 0;
-var maxCoins = 99;
+var maxCoins = 98;
 var coinCount = 0;
 var wasCoin = true;
 var lives = 3;
 var clockRunning = false;
 
-// The map values are added together to determine what to display
-// 0 = Map is empty
-// 1 = Map has coin
-// 2 = Map has pacMan
-// 4 = Map has ghost #1
-// 8 = Map has ghost #2
-// 16 = Map has ghost #3
-// 32 = Map is a wall (should never be combined)
-// 64 = map has portal1
-// 128 = portal2
-// 256 = superCoin to eat ghosts
-// 512 = edibleGhost
+// The map values are OR'ed together to determine what to display
+
+const bEmpty = 0; // 0 = Map is empty
+const bCoin = 1; // 1 = Map has coin
+const bPacman = 2; // 2 = Map has pacMan
+const bGhost1 = 4; // 4 = Map has ghost #1
+const bGhost2 = 8; // 8 = Map has ghost #2
+const bGhost3 = 16; // 16 = Map has ghost #3
+const bGhostAny = (bGhost1 | bGhost2 | bGhost3)
+const bWall = 32; // 32 = Map is a wall (should never be combined)
+const bPortal1 = 64; // 64 = map has portal1
+const bPortal2 = 128; // 128 = portal2
+const bSuperCoin = 256; // 256 = superCoin to eat ghosts
 
 function coinV(num) {
-    return (Math.trunc(num / 1) % 2 == 1); // true if coin
+    return ((num & bCoin) != 0); // true if coin
 }
 
 function pacManV(num) {
-    return (Math.trunc(num / 2) % 2 == 1); // true if pacMan
+    return ((num & bPacman) != 0); // true if pacMan
 }
 
 function wallV(num) {
-    return (Math.trunc(num / 32) % 2 == 1); // true if wall
+    return ((num & bWall) != 0); // true if wall
 }
 
 function ghostV1(num) {
-    return (Math.trunc(num / 4) % 2 == 1);
+    return ((num & bGhost1) != 0);
 }
 
 function ghostV2(num) {
-    return (Math.trunc(num / 8) % 2 == 1);
+    return ((num & bGhost2) != 0);
 }
 
 function ghostV3(num) {
-    return (Math.trunc(num / 16) % 2 == 1);
+    return ((num & bGhost3) != 0);
 }
 
 function portalOne(num) {
-    return (Math.trunc(num / 64) % 2 == 1); // true if portal
+    return ((num & bPortal1) != 0);
 }
 
 function portalTwo(num) {
-    return (Math.trunc(num / 128) % 2 == 1); // true if portal
+    return ((num & bPortal2) != 0);
 }
 
 function superCoinV(num) {
-    return (Math.trunc(num / 256) % 2 == 1);
+    return ((num & bSuperCoin) != 0);
 }
 
 function createMap() { // places items at the x,y coordinates of grid
@@ -110,23 +111,23 @@ function createMap() { // places items at the x,y coordinates of grid
             if (portalOne(map[y][x])) {
                 tempText = "<div class='empty'></div>";
             }
-            if (portalTwo(map[y][x], 4)) {
+            if (portalTwo(map[y][x])) {
                 tempText = "<div class='empty'></div>";
             }
             if (wallV(map[y][x])) { // walls
                 tempText = "<div class='wall'></div>";
             }
             if (lives <= 0) {
-                stopInterval(int);
-                stopInterval(gameTime);
+                clearInterval(int);
+                clearInterval(gameTime);
                 $('#gameOutcome').text("Game Over!!!");
                 $('#gameOver').modal('open');
                 lives = 1;
                 $('#lives').hide();
             }
             if (coinCount == maxCoins) {
-                stopInterval(int);
-                stopInterval(gameTime);
+                clearInterval(int);
+                clearInterval(gameTime);
                 $('#gameOutcome').text("You Won!!!");
                 $('#gameOver').modal('open');
                 lives = 1;
@@ -162,46 +163,59 @@ document.onkeyup = (e) => {
     newy = pacman.y + deltay;
     newx = pacman.x + deltax;
     if (wallV(map[newy][newx]) != true) { // Not on a wall?
-        console.log("pacman not moving to a wall");
-        map[pacman.y][pacman.x] -= 2; // Move pacMan off
-        map[newy][newx] += 2; // Move onto new location
+
         if (coinV(map[newy][newx])) { // On a coin?
-            map[newy][newx] -= 1; // Eat coin
+            map[newy][newx] &= ~bCoin; // Eat coin
             score++; // Earn some score
             coinCount++;
             console.log('score: ' + score)
         }
         if (superCoinV(map[newy][newx])) { // On a superCoin?
-            map[newy][newx] -= 256; // Eat coin
+            map[newy][newx] &= ~bSuperCoin; // Eat coin
             score++; // Earn some score
             coinCount++;
             // start the countDown
             countDown.start();
             console.log('score: ' + score);
-            // need to call a function to turn ghosts flashing blue
         }
         // if touching a ghost 
-        if (ghostV1(map[newy][newx]) == true || ghostV2(map[newy][newx]) == true || ghostV3(map[newy][newx]) == true) {
+        var foundGhostVal = map[newy][newx] & bGhostAny;
+        if (foundGhostVal != 0) {
             // if the clock is running you eat ghost
             if (clockRunning == true) {
-
+                map[newy][newx] &= ~foundGhostVal;
+                // if it was ghost1 move him here
+                if (foundGhostVal == 4) {
+                    ghost1.x = 7;
+                    ghost1.y = 6;
+                } // if ghost2
+                if (foundGhostVal == 8) {
+                    ghost2.x = 7;
+                    ghost2.y = 6;
+                } // if ghost3
+                // if (foundGhostVal == 16) {
+                //     ghost3.x = 7;
+                //     ghost3.y = 6;
+                // }
+                score += 15;
+            } else {
+                map[pacman.y][pacman.x] &= ~bPacman;
+                newx = 7;
+                newy = 6;
+                lives--;
             }
-            map[pacman.y][pacman.x] -= 2;
-            newx = 7;
-            newy = 6;
-            lives--;
         }
         // left portal transports to right
         if (portalOne(map[newy][newx]) == true) {
-            map[newy][newx] -= 2;
             newx = 15;
             newy = 6;
         } // right portal transports to left
         if (portalTwo(map[newy][newx]) == true) {
-            map[newy][newx] -= 2;
             newx = 1;
             newy = 6;
         }
+        map[pacman.y][pacman.x] &= ~bPacman; // Move pacMan off
+        map[newy][newx] |= bPacman; // Move onto new location
         // update pac position
         pacman.x = newx;
         pacman.y = newy;
@@ -220,7 +234,7 @@ class Ghost {
     }
 
     init() {
-        map[this.y][this.x] += this.ghostVal;
+        map[this.y][this.x] |= this.ghostVal;
     }
 
     dist(dy, dx) {
@@ -235,10 +249,12 @@ class Ghost {
 
     // chasing packman around
     moveToward() {
-        var deltax = 0;
-        var deltay = 0;
+        let newx;
+        let newy;
+        let deltax = 0;
+        let deltay = 0;
         // Current distance from pacman
-        var distance = 9999;
+        let distance = 9999;
         // Move down?
         // if (this.dist(1, 0) < (distance + Math.random() * 2.0)) {
         if (this.dist(1, 0) < distance) {
@@ -265,7 +281,7 @@ class Ghost {
             distance = this.dist(0, -1);
         } // if you're touching pacman
         if (pacManV(map[this.y][this.x])) {
-            map[this.y][this.x] -= 2;
+            map[this.y][this.x] &= ~bPacman;
             pacman.x = 7;
             pacman.y = 6;
             lives--;
@@ -281,21 +297,23 @@ class Ghost {
             newy = 6;
         }
 
-        var newy = this.y + deltay;
-        var newx = this.x + deltax;
+        newy = this.y + deltay;
+        newx = this.x + deltax;
         // Move ghost off
-        map[this.y][this.x] -= this.ghostVal;
+        map[this.y][this.x] &= ~this.ghostVal;
         // Move onto new location
-        map[newy][newx] += this.ghostVal;
+        map[newy][newx] |= this.ghostVal;
         this.x = newx;
         this.y = newy;
     }
 
     runAway() {
-        var deltax = 0;
-        var deltay = 0;
+        let newx;
+        let newy;
+        let deltax = 0;
+        let deltay = 0;
         // Current distance from pacman
-        var distance = 9999;
+        let distance = 0;
         // Move down?
         // if (this.dist(1, 0) > (distance + Math.random() * 2.0)) {
         if (this.dist(1, 0) > distance) {
@@ -330,12 +348,12 @@ class Ghost {
             newy = 6;
         }
 
-        var newy = this.y + deltay;
-        var newx = this.x + deltax;
+        newy = this.y + deltay;
+        newx = this.x + deltax;
         // Move ghost off
-        map[this.y][this.x] -= this.ghostVal;
+        map[this.y][this.x] &= ~this.ghostVal;
         // Move onto new location
-        map[newy][newx] += this.ghostVal;
+        map[newy][newx] |= this.ghostVal;
         this.x = newx;
         this.y = newy;
     }
@@ -345,12 +363,12 @@ class Ghost {
 
 // initialize pacman
 function initPac() {
-    map[pacman.y][pacman.x] = 2;
+    map[pacman.y][pacman.x] |= bPacman;
 }
 
 // moves ghosts
 var int;
-var int2
+var int2;
 var gameTime;
 var ghostInt = 500;
 var gameInt = 300;
@@ -374,20 +392,17 @@ function gameUpdate() {
         createMap()
     }, gameInt);
 }
-// stop the ghosts form moving
-function stopInterval(i) {
-    clearInterval(i);
-}
 
 
 // initialize game 
-let ghost1 = new Ghost(2, 1, 4);
-let ghost2 = new Ghost(14, 11, 8);
+let ghost1 = new Ghost(2, 1, bGhost1);
+let ghost2 = new Ghost(14, 11, bGhost2);
 initPac();
 ghost2.init();
 ghost1.init();
 gameUpdate();
 ghostMoveToward();
+// ghostRunAway()
 
 // restart the game
 $('#playAgain').on('click', () => {
@@ -397,15 +412,15 @@ $('#playAgain').on('click', () => {
 
 // countDown
 var countDown = {
-    time: 15, // start at 15
+    time: 10, // start at 15
     reset: function() { // always reset to 15
-        countDown.time = 15;
+        countDown.time = 10;
     },
 
     start: function() {
         // stop ghost chasing pacman
-        stopInterval(int);
-        // run away from pacman
+        clearInterval(int);
+        // // run away from pacman
         ghostRunAway();
         if (!clockRunning) { // set to decrement to 1 second
             clockRunning = true; // clock is now running
@@ -426,8 +441,8 @@ var countDown = {
             countDown.stop();
             countDown.reset();
             // stop ghost runAway
-            stopInterval(int2)
-            // resume ghost chasing pacman
+            clearInterval(int2)
+                // resume ghost chasing pacman
             ghostMoveToward();
         }
     },
